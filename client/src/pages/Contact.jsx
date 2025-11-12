@@ -12,25 +12,31 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.name || !form.email || !form.message) {
+      toast.error("Please fill out all fields before sending.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const API_URL = import.meta.env.VITE_API_URL?.trim();
       const res = await fetch(`${API_URL}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
-      if (res.ok) {
-        toast.success("Message received. We'll be in touch soon.", {
-          icon: "📨",
-        });
+      const data = await res.json().catch(() => null);
+
+      if (res.ok && data?.success) {
+        toast.success("Message received. We'll be in touch soon.", { icon: "📨" });
         setForm({ name: "", email: "", message: "" });
       } else {
-        toast.error("Failed to send message. Please try again.");
+        toast.error(data?.message || "Failed to send message. Please try again.");
       }
-    } catch {
+    } catch (err) {
       toast.error("Something went wrong. Check your connection.");
     } finally {
       setIsLoading(false);
@@ -53,6 +59,7 @@ const Contact = () => {
             value={form.name}
             onChange={handleChange}
             placeholder="Your Name"
+            aria-label="Your Name"
             className="w-full px-4 py-3 rounded bg-[#1F2833] text-white placeholder-[#9CA3AF] border border-[#1F2833] focus:ring-2 focus:ring-[#66FCF1] focus:outline-none"
             required
           />
@@ -62,6 +69,7 @@ const Contact = () => {
             value={form.email}
             onChange={handleChange}
             placeholder="Your Email"
+            aria-label="Your Email"
             className="w-full px-4 py-3 rounded bg-[#1F2833] text-white placeholder-[#9CA3AF] border border-[#1F2833] focus:ring-2 focus:ring-[#66FCF1] focus:outline-none"
             required
           />
@@ -71,6 +79,7 @@ const Contact = () => {
             value={form.message}
             onChange={handleChange}
             placeholder="Your Message"
+            aria-label="Your Message"
             className="w-full px-4 py-3 rounded bg-[#1F2833] text-white placeholder-[#9CA3AF] border border-[#1F2833] focus:ring-2 focus:ring-[#66FCF1] focus:outline-none"
             required
           ></textarea>
@@ -91,7 +100,7 @@ const Contact = () => {
         <p className="text-[#9CA3AF] text-sm mt-6">
           Or reach us directly at{" "}
           <a
-            href="mailto:hello@QLeap.ai"
+            href="mailto:qleap.techai@gmail.com"
             className="text-[#66FCF1] hover:text-[#45A29E] underline transition"
           >
             qleap.techai@gmail.com
