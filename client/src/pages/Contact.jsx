@@ -36,7 +36,8 @@ const Contact = () => {
       } else {
         toast.error(data?.message || "Failed to send message. Please try again.");
       }
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       toast.error("Something went wrong. Check your connection.");
     } finally {
       setIsLoading(false);
@@ -48,7 +49,7 @@ const Contact = () => {
       <section className="mt-24 max-w-2xl mx-auto px-6 text-center text-[#C5C6C7]">
         <h2 className="text-5xl font-bold text-[#66FCF1] mb-4">Get in Touch</h2>
         <p className="text-[#9CA3AF] mb-10">
-          Have an idea, collaboration, or project? Let’s connect.  
+          Have an idea, collaboration, or project? Let’s connect.
           QLeap.ai thrives on purposeful partnerships and bold innovation.
         </p>
 
